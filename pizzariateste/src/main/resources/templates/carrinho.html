@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css"  media="screen,projection"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
+    <title>Pizzaria</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Carrinho de Compras</h2>
+      <div >
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Quantidade</th>
+              <th>Valor total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="pedido: ${pedido.itensPedido}">
+              <td th:text="${pedido.produto.nome}"></td>
+              <td th:text="${pedido.produto.descricao}"></td>
+              <td
+                th:text="'R$' + ' ' + ${#numbers.formatDecimal(pedido.produto.valor,1,'POINT',2,'COMMA')}"
+              ></td>
+              <td th:text="${pedido.quantidade}"></td>
+              <td
+                th:text="'R$' + ' ' + ${#numbers.formatDecimal(pedido.produto.valor * pedido.quantidade,1,'POINT',2,'COMMA')}"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+
+      <p
+        th:text="'Valor total do pedido: R$ ' + ${#numbers.formatDecimal(valorTotalPedido,1,'POINT',2,'COMMA')}"
+      ></p>
+
+    
+
+      <div>
+        <div>
+          <h1>
+            Selecionar forma de pagamento
+          </h1>
+  
+          <form
+            method="POST"
+            th:object="${pedido}"
+            th:action="@{/registrarPedido}"
+          >
+            <select class="browser-default" th:field="*{pagamento}">
+              <option value="pix">PIX</option>
+              <option value="debito">Débito</option>
+              <option value="credito">Crédito</option>
+              <option value="dinheiro">Dinheiro</option>
+            </select>
+  
+            <button class="waves-effect waves-light btn"><i class="material-icons left">grade</i>Finalizar</button>
+          </form>
+        </div>
+      </div>
+
+            
+      <a id="cancelarPedidoBtn" class="waves-effect waves-light btn"><i class="material-icons left">backspace</i>Cancelar Pedido</a>
+            <script>
+              const cancelarPedidoBtn = document.getElementById("cancelarPedidoBtn");
+              cancelarPedidoBtn.addEventListener("click", confirmarCancelamento);
+        
+              function confirmarCancelamento() {
+                const respostaUsuariosobreCancelamento = confirm("Realemente deseja cancelar o pedido?");
+                if (respostaUsuariosobreCancelamento) {
+                      window.location.pathname = "/cancelarPedido";
+                      window.alert("Pedido Cancelado");
+                  }else{pass}
+              }</script>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+>
+<head>
+  <title>Pizzaria</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css"  media="screen,projection"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+  
+
+<body>
+    <section id="destaque">
+        <h2>Pizzas Gourmet</h2>
+        <p>As melhores pizzas da cidade, preparadas com ingredientes frescos e de alta qualidade.</p>
+        
+    </section>
+        <h1>Produtos</h1>
+        <a th:href="@{/listarProdutos}" class="waves-effect waves-light btn"><i class="material-icons left">autorenew</i>Recarregar Catálogo</a>
+        </a>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="produto: ${produtos}">
+              <td> <span th:text="${produto.nome}"></span></td>
+              <td> <span th:text="${produto.descricao}"></span></td>
+              <td> <span th:text="'R$' + ' ' + ${#numbers.formatDecimal(produto.valor,1,'POINT',2,'COMMA')}"></span></td>
+              <td>
+                <a th:href="@{/selecionaProduto(codigo=${produto.codigo})}" class="waves-effect waves-light btn"><i class="material-icons left"> add_circle_outline </i>Selecionar</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+     
+
+    <div class='container' th:if="${produtoSelecionado}">
+      <div>
+        <h2>Produto selecionado</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td th:text="${produtoSelecionado.nome}"></td>
+              <td th:text="${produtoSelecionado.descricao}"></td>
+              <td
+                th:text="'R$' + ' ' + ${#numbers.formatDecimal(produtoSelecionado.valor,1,'POINT',2,'COMMA')}"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <form
+          method="POST"
+          th:object="${itemPedido}"
+          th:action="@{/incluirPedido}"
+          class="browser-default"
+        >
+          <div th:if="${produtoSelecionado.tipo == 'pizza'}">
+            <label for="tamanhos">Tamanho</label>
+            <select class="browser-default" th:field="*{tamanho}" id="tamanhos">
+              <option value="Pequena">Pequena</option>
+              <option value="Média">Média</option>
+              <option value="Grande">Grande</option>
+            </select>
+          </div>
+          
+          <div th:if="${produtoSelecionado.tipo == 'bebida'}">
+            <label for="tamanhos">Tamanho</label>
+            <select class="browser-default" th:field="*{tamanho}" id="tamanhos">
+              <option value="250ml">250ml</option>
+              <option value="500ml">500ml</option>
+              <option value="1L">1L</option>
+              <option value="2L">2L</option>
+            </select>
+          </div>
+          <div>
+            <label for="quantidade">Quantidade</label>
+            <input
+              
+              th:field="*{quantidade}"
+              type="number"
+              min="1"
+              th:onchange="'calculateValue()'"
+              required
+            />
+          </div>
+
+          <div>
+            <span>Valor total:</span>
+            <span
+              id="valor"
+              type="text"
+              th:text="${produtoSelecionado.valor}"
+              readonly
+            ></span>
+          </div>
+          <button class="waves-effect waves-light btn"><i class="material-icons left"> add_shopping_cart </i>Incluir no pedido</button>
+        </form>
+        <br>
+        <br>
+      </div>
+    </div>
+    <a th:href="@{/confirmarPedido}"  class="waves-effect waves-light btn"><i class="material-icons left"> shopping_cart </i>Ir para o carrinho</a>
+    </a>
+    <a id="cancelarPedidoBtn" class="waves-effect waves-light btn"><i class="material-icons left">backspace</i>Cancelar Pedido</a>
+    <script>
+      const cancelarPedidoBtn = document.getElementById("cancelarPedidoBtn");
+      cancelarPedidoBtn.addEventListener("click", confirmarCancelamento);
+
+      function confirmarCancelamento() {
+        const respostaUsuariosobreCancelamento = confirm("Realemente deseja cancelar o pedido?");
+        if (respostaUsuariosobreCancelamento) {
+              window.location.pathname = "/cancelarPedido";
+              window.alert("Pedido Cancelado");
+          }else{pass}
+      }
+    </script>
+    <script th:inline="javascript">
+      const pValorTotal = document.querySelector("#valor");
+      const valorTotal = parseFloat(pValorTotal.innerText.replace("R$", "").replace(",", "."));
+  
+      const quantidadeInput = document.querySelector("#quantidade");
+  
+      function calculateValue() {
+          const quantidade = parseFloat(quantidadeInput.value);
+          const valorTotalCalculado = valorTotal * quantidade;
+  
+          pValorTotal.innerText = `R$ ${valorTotalCalculado.toFixed(2)}`;
+      }
+  
+      quantidadeInput.addEventListener("input", calculateValue);
+  </script>
+  <script> 
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems, options);
+  });
+  </script>
+
+  <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
+</body>
+</html>
