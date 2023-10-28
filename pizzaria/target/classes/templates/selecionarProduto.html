@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizzaria</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 mb-4">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" th:href="@{/listarProdutos}"
+            >Novo pedido</a
+          >
+        </li>
+        
+      </ul>
+    </nav>
+
+    <!-- <h1 class="h1 text-center">Produtos</h1> -->
+
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title text-center">Produtos</h1>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="produto: ${produtos}">
+              <td th:text="${produto.nome}"></td>
+              <td th:text="${produto.descricao}"></td>
+              <td
+                th:text="'R$' + ' ' + ${#numbers.formatDecimal(produto.valor,1,'POINT',2,'COMMA')}"
+              ></td>
+              <td>
+                <a th:href="@{/selecionaProduto(codigo=${produto.codigo})}">
+                  <button class="btn btn-primary">Selecionar</button>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" th:if="${produtoSelecionado}" style="margin-top: 25px">
+      <div class="card-body">
+        <h2 class="card-title text-center">Produto selecionado</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td th:text="${produtoSelecionado.nome}"></td>
+              <td th:text="${produtoSelecionado.descricao}"></td>
+              <td
+                th:text="'R$' + ' ' + ${#numbers.formatDecimal(produtoSelecionado.valor,1,'POINT',2,'COMMA')}"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <form
+          method="POST"
+          th:object="${itemPedido}"
+          th:action="@{/incluirNoPedido}"
+          style="margin-top: 25px"
+        >
+          <div class="mb-3" th:if="${produtoSelecionado.tipo == 'pizza'}">
+            <label for="tamanhos">Tamanho</label>
+            <select class="form-control" th:field="*{tamanho}" id="tamanhos">
+              <option value="Pequena">Pequena</option>
+              <option value="Média">Média</option>
+              <option value="Grande">Grande</option>
+            </select>
+          </div>
+          <br>
+          <br>
+          <div class="mb-3" th:if="${produtoSelecionado.tipo == 'bebida'}">
+            <label for="tamanhos">Tamanho</label>
+            <select class="form-control" th:field="*{tamanho}" id="tamanhos">
+              <option value="250ml">250ml</option>
+              <option value="500ml">500ml</option>
+              <option value="1L">1L</option>
+              <option value="2L">2L</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="quantidade">Quantidade</label>
+            <input
+              class="form-control"
+              th:field="*{quantidade}"
+              type="number"
+              min="1"
+              th:onchange="'calculateValue()'"
+              required
+            />
+          </div>
+
+          <div class="mb-3 h5">
+            <span>Valor total:</span>
+            <span
+              id="valor"
+              type="text"
+              th:text="${produtoSelecionado.valor}"
+              readonly
+            ></span>
+          </div>
+          <button class="btn btn-success">Incluir no pedido</button>
+        </form>
+      </div>
+    </div>
+  <br>
+  <br>
+
+    <li
+      class="nav-item"
+      th:if="${pedido != null && #lists.size(pedido.itensPedido) > 0}">
+      <a class="nav-link" th:href="@{/confirmarPedido}">Finalizar pedido</a>
+    </li>
+    <script th:inline="javascript">
+      const pValorTotal = document.querySelector("#valor");
+      const valorTotal = pValorTotal.innerText;
+
+      function calculateValue() {
+        const quantidade = document.querySelector("#quantidade").value;
+        const valorTotalCalculado = Number(valorTotal) * Number(quantidade);
+
+        pValorTotal.innerText = valorTotalCalculado.toLocaleString("pt-br", {
+          style: "currency",
+          currency: "BRL",
+        });
+      }
+
+      calculateValue();
+    </script>
+  </body>
+</html>

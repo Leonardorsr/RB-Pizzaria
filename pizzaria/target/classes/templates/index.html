@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurante de Pizzas Deliciosas</title>
+    <link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+<body>
+    <header>
+        <h1>Restaurante de Pizzas Deliciosas</h1>
+        <nav>
+            <ul>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#sobre">Sobre Nós</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="destaque">
+        <h2>Pizzas Gourmet</h2>
+        <p>As melhores pizzas da cidade, preparadas com ingredientes frescos e de alta qualidade.</p>
+        <a href="#menu" class="botao-destaque">Ver o Menu</a>
+    </section>
+
+    <h1 class="card-title text-center">Produtos</h1>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="produto: ${produtos}">
+              <td th:text="${produto.nome}"></td>
+              <td th:text="${produto.descricao}"></td>
+              <td
+                th:text="'R$' + ' ' + ${#numbers.formatDecimal(produto.valor,1,'POINT',2,'COMMA')}"
+              ></td>
+              <td>
+                <a th:href="@{/selecionaProduto(codigo=${produto.codigo})}">
+                  <button class="btn btn-primary">Selecionar</button>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    
+    <button id="cancelarPedidoBtn">Cancelar Pedido</button>
+    
+    <section id="sobre">
+        <h2>Sobre Nós</h2>
+        <p>Nosso restaurante de pizzas é dedicado a oferecer a você a melhor experiência de pizza. Nossas pizzas são feitas com paixão e carinho, sempre usando os melhores ingredientes disponíveis.</p>
+    </section>
+
+    <section id="contato">
+        <h2>Contato</h2>
+        <p>Estamos ansiosos para ouvir de você. Entre em contato conosco para fazer um pedido ou tirar suas dúvidas.</p>
+        <address>
+            <p>Endereço: Rua da Pizzaria, 123</p>
+            <p>Telefone: (123) 456-7890</p>
+            <p>Email: contato@pizzadeliciosa.com</p>
+        </address>
+    </section>
+    
+    <footer>
+        <p>&copy; 2023 Restaurante de Pizzas Deliciosas. Todos os direitos reservados.</p>
+    </footer>
+    <script>
+      const cancelarPedidoBtn = document.getElementById("cancelarPedidoBtn");
+      cancelarPedidoBtn.addEventListener("click", confirmarCancelamento);
+
+      function confirmarCancelamento() {
+        const respostaUsuariosobreCancelamento = confirm("Realemente deseja cancelar o pedido?");
+        if (respostaUsuariosobreCancelamento) {
+              // Ação de cancelamento - Redirecionar ou fazer o que for necessário
+              window.location.pathname = "/cancelarPedido";
+              // Remover a caixa de diálogo
+              document.body.removeChild(dialog);
+              window.alert("Pedido Cancelado");
+          }else{pass}
+      }
+    </script>
+</body>
+</html>
