@@ -73,7 +73,7 @@
       </div>
 
             
-      <a id="cancelarPedidoBtn" class="waves-effect waves-light btn"><i class="material-icons left">backspace</i>Cancelar Pedido</a>
+      <a th:href="@{/cancelarPedido}" class="waves-effect waves-light btn"><i class="material-icons left">backspace</i>Cancelar Pedido</a>
             <script>
               const cancelarPedidoBtn = document.getElementById("cancelarPedidoBtn");
               cancelarPedidoBtn.addEventListener("click", confirmarCancelamento);

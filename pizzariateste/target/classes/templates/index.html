@@ -17,9 +17,9 @@
 <body>
     <section id="destaque">
         <h2>Pizzas Gourmet</h2>
-        <p>As melhores pizzas da cidade, preparadas com ingredientes frescos e de alta qualidade.</p>
-        
+        <p>As melhores pizzas da cidade, preparadas com ingredientes frescos e de alta qualidade.</p> 
     </section>
+      
         <h1>Produtos</h1>
         <a th:href="@{/listarProdutos}" class="waves-effect waves-light btn"><i class="material-icons left">autorenew</i>Recarregar Catálogo</a>
         </a>
@@ -45,7 +45,7 @@
         </table>
      
 
-    <div class='container' th:if="${produtoSelecionado}">
+    <div class="container" th:if="${produtoSelecionado}">
       <div>
         <h2>Produto selecionado</h2>
 
@@ -68,12 +68,7 @@
           </tbody>
         </table>
 
-        <form
-          method="POST"
-          th:object="${itemPedido}"
-          th:action="@{/incluirPedido}"
-          class="browser-default"
-        >
+        <form method="POST" th:object="${itemPedido}" th:action="@{/incluirPedido}" class="browser-default">
           <div th:if="${produtoSelecionado.tipo == 'pizza'}">
             <label for="tamanhos">Tamanho</label>
             <select class="browser-default" th:field="*{tamanho}" id="tamanhos">
@@ -121,7 +116,7 @@
     </div>
     <a th:href="@{/confirmarPedido}"  class="waves-effect waves-light btn"><i class="material-icons left"> shopping_cart </i>Ir para o carrinho</a>
     </a>
-    <a id="cancelarPedidoBtn" class="waves-effect waves-light btn"><i class="material-icons left">backspace</i>Cancelar Pedido</a>
+    <a th:href="@{/cancelarPedido}" class="waves-effect waves-light btn"><i class="material-icons left">backspace</i>Cancelar Pedido</a>
     <script>
       const cancelarPedidoBtn = document.getElementById("cancelarPedidoBtn");
       cancelarPedidoBtn.addEventListener("click", confirmarCancelamento);
@@ -148,7 +143,7 @@
       }
   
       quantidadeInput.addEventListener("input", calculateValue);
-  </script>
+    </script>
   <script> 
     document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('select');

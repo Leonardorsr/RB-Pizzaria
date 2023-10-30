@@ -31,4 +31,13 @@ public class Cliente {
 
   @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
   private List<Pedido> pedidos = new ArrayList<>();
+  
+  public Cliente(int codigo, long cpf, String email, String nome, String enderecoEntrega, long telefone){
+      this.codigo=codigo;
+      this.cpf=cpf;
+      this.email=email;
+      this.nome=nome;
+      this.enderecoEntrega=enderecoEntrega;
+      this.telefone=telefone;
+  }
 }

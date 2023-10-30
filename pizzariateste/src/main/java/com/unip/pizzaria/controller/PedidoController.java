@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.unip.pizzaria.model.Cliente;
 import com.unip.pizzaria.model.ItemPedido;
 import com.unip.pizzaria.model.Pedido;
@@ -38,7 +37,7 @@ public class PedidoController {
   Pedido pedido = new Pedido();
   Cliente cliente;
 
-  public float getValorTotalPedido() {
+  public float ValorTotalPedido() {
     float valorTotalPedido = 0;
 
     for (ItemPedido itemPedido : pedido.getItensPedido()) {
@@ -91,7 +90,7 @@ public class PedidoController {
     ModelAndView modelAndView = new ModelAndView("carrinho");
 
     modelAndView.addObject("pedido", pedido);
-    modelAndView.addObject("valorTotalPedido", getValorTotalPedido());
+    modelAndView.addObject("valorTotalPedido", ValorTotalPedido());
 
     return modelAndView;
   }
@@ -125,7 +124,7 @@ public class PedidoController {
     Date date = new Date();
     Timestamp timestamp = new Timestamp(date.getTime());
 
-    this.pedido.setValor(getValorTotalPedido());
+    this.pedido.setValor(ValorTotalPedido());
     this.pedido.setCliente(cliente);
     this.pedido.setMomento(timestamp);
     this.pedido.setStatus("em andamento");
@@ -144,23 +143,5 @@ public class PedidoController {
     ModelAndView modelAndView = new ModelAndView("index");
 
     return modelAndView;
-  }
-
-  @RequestMapping("/alterarEndereco")
-  public ModelAndView alterarEndereco() {
-    ModelAndView modelAndView = new ModelAndView("carrinho");
-
-    modelAndView.addObject("cliente", cliente);
-    modelAndView.addObject("pedido", pedido);
-
-    return modelAndView;
-  }
-
-  @RequestMapping("/alteraEndereco")
-  public String alteraEndereco(@ModelAttribute("cliente") Cliente cliente) {
-    this.cliente.setEnderecoEntrega(cliente.getEnderecoEntrega());
-    clienteRepository.save(this.cliente);
-
-    return "redirect:/carrinho";
   }
 }
